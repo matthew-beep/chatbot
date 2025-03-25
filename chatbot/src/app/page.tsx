@@ -99,51 +99,50 @@ export default function Home() {
               </Card>
             </div>
         </section>
-        <section className="w-full h-auto pb-24">
-        {messages.map((message, index) => (
-  <div
-    key={index}
-    className={`p-2 my-2 rounded-md ${
-      message.role === "user"
-        ? "bg-blue-500 text-white self-end ml-auto text-right max-w-max"
-        : "bg-gray-300 text-black self-start text-left w-auto"
-    }`}
-  >
-    {message.role === "user" ? (
-      <p>{message.text}</p> // ✅ Directly display text for user
-    ) : (
-      <ul className="flex w-full gap-3">
-        {message.text.map((item, idx) => ( // ✅ Map only if it's a bot message
-          <li className="w-full" key={idx}> {/* Apply max-w-max here */}
-            <Card className="p-0 w-full flex flex-col gap-0 border-2 min-h-60 border-amber-300">
-              <CardHeader className=" h-60 p-0">
-                <Image
-                  src={preview[idx]}
-                  width={300}
-                  height={300}
-                  className="w-full h-full object-contain"
-                  alt={`Uploaded image #${index}`}
-                />
-              </CardHeader>
-              <CardContent className="h-auto">
-                <p className="font-light">{item.caption ? item.caption : "No text generated"}</p>
-              </CardContent>
-            </Card>
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-))}
+        <section className="w-full h-auto pb-24 flex flex-col ">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-2 my-2 rounded-md flex ${
+                message.role === "user"
+                  ? "bg-blue-500 text-white self-end ml-auto text-right max-w-max"
+                  : "bg-gray-300 text-black self-start text-left  w-auto"
+              }`}
+            >
+              {message.role === "user" ? (
+                <p>{message.text}</p> // ✅ Directly display text for user
+              ) : (
+                <ul className="flex md:flex-row flex-col gap-3 h-auto  justify-between">
+                  {message.text.map((item, idx) => ( // ✅ Map only if it's a bot message
+                    <li className="xl:w-80 lg:w-40 md:w-32 h-auto" key={idx}> {/* Apply max-w-max here */}
+                      <Card className="p-0 flex flex-col gap-0 w-full hover:scale-120 transition-all duration-200">
+                        <CardHeader className="h-full p-0">
+                          <Image
+                            src={preview[idx]}
+                            width={300}
+                            height={300}
+                            className="w-full h-full object-contain"
+                            alt={`Uploaded image #${index}`}
+                          />
+                        </CardHeader>
+                        <CardContent className="h-auto">
+                          <p className="font-light">{item.caption ? item.caption : "No text generated"}</p>
+                        </CardContent>
+                      </Card>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
 
-{loading && (
-  <div className="bg-gray-300 self-start text-left max-w-max w-auto rounded-full px-3 py-4 h-auto flex gap-3">
-    <Skeleton className="bg-[#202020] w-3 h-3 rounded-full"/>
-    <Skeleton className="bg-[#202020] w-3 h-3 rounded-full"/>
-    <Skeleton className="bg-[#202020] w-3 h-3 rounded-full"/>
-  </div>
-)}
-
+          {loading && (
+            <div className="bg-gray-300 self-start text-left max-w-max w-auto rounded-full px-3 py-4 h-auto flex gap-3">
+              <Skeleton className="bg-[#202020] w-3 h-3 rounded-full"/>
+              <Skeleton className="bg-[#202020] w-3 h-3 rounded-full"/>
+              <Skeleton className="bg-[#202020] w-3 h-3 rounded-full"/>
+            </div>
+          )}
         </section>
         <section className="w-full h-10 fixed bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-white to-transparent">
           <div className="w-9/12">
