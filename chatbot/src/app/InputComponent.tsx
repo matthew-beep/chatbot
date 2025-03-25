@@ -2,16 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Send } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 
 interface InputComponentProps {
     setFiles: React.Dispatch<React.SetStateAction<File[]>>,
     files: File[],
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    loading: boolean
+    loading: boolean,
+    setMessages: React.Dispatch<React.SetStateAction<
+    ({ role: "user"; text: string } | { role: "bot"; text: { caption: string }[] })[]
+  >>;
   }
-const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoading, loading }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoading, loading, setMessages }) => {
 
     const [input, setInput] = useState<string>("");
 
@@ -33,7 +35,11 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoa
     };
 
     const handleSubmit = async () => {
-        if (!loading) {
+        if (!loading && (input.length > 0 && files.length > 0)) {
+            setMessages((prev) => [
+                ...prev,
+                { role: "user", text: input } // Add user message to the array
+              ]);
 
             setLoading(true);
             try {
@@ -49,13 +55,25 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoa
             
                 const data = await res.json();
                 console.log(data); // Handle the response
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                      role: "bot",
+                      text: data.results.map((res: { caption: string }) => ({ caption: res.caption }))
+                    }
+                  ]);
             } catch (e) {
                 console.log(e);
             } finally {
                 setLoading(false);
+                setInput(""); // Clear input field after submission
             }
         }
-        
+
+        if (input.length == 0 || files.length == 0) {
+            alert("Please enter a prompt and select at least one image");
+            return;
+        }
     };
 
     return (
@@ -71,7 +89,7 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoa
                 onChange={handleFileChange}
                 multiple />
             </Button>
-            <Input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Prompt..."></Input>
+            <Input type="text" className="bg-white" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Prompt..."></Input>
             <Button className="cursor-pointer" onClick={handleSubmit}><Send /></Button>
         </div>
     );

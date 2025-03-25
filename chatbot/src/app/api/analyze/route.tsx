@@ -1,6 +1,4 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { generateText } from 'ai';
 import { NextRequest, NextResponse } from "next/server";
 
 //const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -21,7 +19,7 @@ export async function POST(req: NextRequest) {
     const imageFiles: File[] = [];
 
     // Extract images from FormData
-    images.forEach((value, key) => {
+    images.forEach((value) => {
       if (value instanceof File) {
         console.log(`Processing file: ${value.name} (${value.type})`);
         imageFiles.push(value);
@@ -72,6 +70,7 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ results });
   } catch (error) {
+    console.log("Error generating text for image:", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   } 
 }
