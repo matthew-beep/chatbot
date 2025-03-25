@@ -2,13 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Send } from "lucide-react";
-import { useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRef, useState } from "react";
 
 interface InputComponentProps {
     setFiles: React.Dispatch<React.SetStateAction<File[]>>,
-    files: File[]
+    files: File[],
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    loading: boolean
   }
-const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoading, loading }) => {
+
+    const [input, setInput] = useState<string>("");
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const handleClick = () => {
@@ -27,11 +32,37 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files }) => {
         }
     };
 
+    const handleSubmit = async () => {
+        if (!loading) {
+
+            setLoading(true);
+            try {
+                const formData = new FormData();
+                files.forEach(file => {
+                    formData.append("images", file);  // Appends each image file
+                });
+                formData.append("prompt", input);
+                const res = await fetch("/api/analyze", {
+                    method: "POST",
+                    body: formData, // Send form data with image files
+                });
+            
+                const data = await res.json();
+                console.log(data); // Handle the response
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+    };
+
     return (
         <div className="flex w-full gap-3">
             <Button className="cursor-pointer" onClick={handleClick}>
                 <Plus />
-                <Input         
+                <input         
                 ref={fileInputRef}
                 className="hidden"
                 id="picture"
@@ -40,8 +71,8 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files }) => {
                 onChange={handleFileChange}
                 multiple />
             </Button>
-            <Input type="text" placeholder="Enter Prompt..."></Input>
-            <Button className="cursor-pointer"><Send /></Button>
+            <Input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Prompt..."></Input>
+            <Button className="cursor-pointer" onClick={handleSubmit}><Send /></Button>
         </div>
     );
 }

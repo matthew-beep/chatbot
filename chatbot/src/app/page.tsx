@@ -11,7 +11,8 @@ export default function Home() {
 
   const [files, setFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<string[]>([]);
-
+  const [response, setResponse] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClick = () => {
@@ -41,7 +42,7 @@ export default function Home() {
 
 
   return (
-    <div className="p-10 flex flex-col items-center h-auto min-h-screen border-2 border-amber-400">
+    <div className="p-10 flex flex-col items-center h-auto min-h-screen">
       <div className="w-9/12 h-full gap-5 flex flex-grow flex-col justify-between">
         <header className="flex flex-col gap-5 items-center">
           <h1 className="text-4xl font-bold w-full text-center">AI Image Analysis</h1>
@@ -63,8 +64,9 @@ export default function Home() {
           </Button>
           }
         </header>
-        <Input className="hidden" id="picture" type="file" accept="image/png, image/jpeg" multiple></Input>
+        <input className="hidden" id="picture" type="file" accept="image/png, image/jpeg" multiple/>
         <section className="flex w-full justify-center gap-3">
+          {loading && <div>loading...</div>}
           {files.map((file, index) => (
               <Card key={index} className="w-full max-w-1/4 max-h-96 hover:scale-125 transition-all duration-200">
                 {preview[index] ? (
@@ -83,7 +85,11 @@ export default function Home() {
               </Card> // ✅ Now correctly mapping over an array
             ))}
         </section>
-        <InputComponent setFiles={setFiles} files={files}/>
+        <section className="w-full h-10">
+          <div className="w-9/12 absolute left-1/2 bottom-10 transform -translate-x-1/2">
+            <InputComponent setFiles={setFiles} files={files} setLoading={setLoading} loading={loading}/>
+          </div>
+        </section>
         </div>
     </div>
   );
