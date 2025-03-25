@@ -77,8 +77,8 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoa
     };
 
     return (
-        <div className="flex w-full gap-3">
-            <Button className="cursor-pointer" onClick={handleClick}>
+        <div className="flex w-full gap-3 px-5 py-2 rounded-full bg-[#cccccc]">
+            <Button className="cursor-pointer rounded-full" onClick={handleClick}>
                 <Plus />
                 <input         
                 ref={fileInputRef}
@@ -89,8 +89,8 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files, setLoa
                 onChange={handleFileChange}
                 multiple />
             </Button>
-            <Input type="text" className="bg-white" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Prompt..."></Input>
-            <Button className="cursor-pointer" onClick={handleSubmit}><Send /></Button>
+            <Input disabled={loading} type="text" className="bg-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Prompt..."></Input>
+            <Button className="cursor-pointer rounded-full disabled:opacity-50 disabled:cursor-not-allowed" onClick={handleSubmit} disabled={loading}><Send /></Button>
         </div>
     );
 }

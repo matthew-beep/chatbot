@@ -51,7 +51,7 @@ export default function Home() {
       <div className="w-9/12 h-full gap-5 flex flex-grow flex-col justify-between">
         <header className="flex flex-col gap-5 items-center">
           <h1 className="text-4xl font-bold w-full text-center">AI Image Analysis</h1>
-          <Card className="p-5 text-xl border-none shadow-none bg-[#F1F5F9] text-[#788599] w-full">
+          <Card className="p-5 text-xl border-none shadow-none bg-[#F1F5F9] text-[#788599] w-auto">
             <h2>Welcome to the AI Image Analysis Chatbot! Upload up to 4 images and ask a question to analyze each image.</h2>
           </Card>
         </header>
@@ -144,7 +144,7 @@ export default function Home() {
             </div>
           )}
         </section>
-        <section className="w-full h-10 fixed bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-white to-transparent">
+        <section className="w-full h-20 fixed bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-white to-transparent">
           <div className="w-9/12">
             <InputComponent setFiles={setFiles} files={files} setLoading={setLoading} loading={loading} setMessages={setMessages}/>
           </div>
