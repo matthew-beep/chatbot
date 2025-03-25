@@ -1,13 +1,14 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { Plus, Send } from "lucide-react";
 import { useRef } from "react";
 
 interface InputComponentProps {
-    setFiles: React.Dispatch<React.SetStateAction<File[]>>
+    setFiles: React.Dispatch<React.SetStateAction<File[]>>,
+    files: File[]
   }
-const InputComponent: React.FC<InputComponentProps> = ({ setFiles }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ setFiles, files }) => {
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const handleClick = () => {
@@ -17,7 +18,13 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles }) => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.files);
         if (!event.target.files) return; // ✅ Prevents null error
-        setFiles(Array.from(event.target.files)); // ✅ Updates state
+        const imgFiles = Array.from(event.target.files)
+        if (imgFiles.length > 4 || imgFiles.length + files.length > 4) {
+            alert("Limit 4 images");
+            return;
+        } else {
+            setFiles((prevFiles) => [...prevFiles, ...imgFiles]); // ✅ Updates state
+        }
     };
 
     return (
@@ -33,9 +40,8 @@ const InputComponent: React.FC<InputComponentProps> = ({ setFiles }) => {
                 onChange={handleFileChange}
                 multiple />
             </Button>
-
-            <Input></Input>
-            <Button></Button>
+            <Input type="text" placeholder="Enter Prompt..."></Input>
+            <Button className="cursor-pointer"><Send /></Button>
         </div>
     );
 }
